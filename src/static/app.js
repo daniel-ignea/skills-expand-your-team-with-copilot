@@ -33,6 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
     community: { label: "Community", color: "#fff3e0", textColor: "#e65100" },
     technology: { label: "Technology", color: "#e8eaf6", textColor: "#3949ab" },
   };
+  const schoolActivitiesName = "Mergington High School Activities";
 
   // State for activities and filters
   let allActivities = {};
@@ -309,7 +310,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const activityUrl = `${window.location.origin}${window.location.pathname}?activity=${encodeURIComponent(
       activityName
     )}`;
-    const shareText = `Check out ${activityName} at Mergington High School Activities! ${formatSchedule(
+    const shareText = `Check out ${activityName} at ${schoolActivitiesName}! ${formatSchedule(
       details
     )}`;
     const encodedText = encodeURIComponent(shareText);
@@ -319,7 +320,7 @@ document.addEventListener("DOMContentLoaded", () => {
       activityUrl,
       shareText,
       facebookShareUrl: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
-      xShareUrl: `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`,
+      xShareUrl: `https://x.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`,
       whatsappShareUrl: `https://wa.me/?text=${encodedText}%20${encodedUrl}`,
     };
   }

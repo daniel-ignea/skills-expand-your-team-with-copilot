@@ -304,6 +304,58 @@ document.addEventListener("DOMContentLoaded", () => {
     return details.schedule;
   }
 
+  // Build social sharing links for an activity
+  function buildSocialShareLinks(activityName, details) {
+    const activityUrl = `${window.location.origin}${window.location.pathname}?activity=${encodeURIComponent(
+      activityName
+    )}`;
+    const shareText = `Check out ${activityName} at Mergington High School Activities! ${formatSchedule(
+      details
+    )}`;
+    const encodedText = encodeURIComponent(shareText);
+    const encodedUrl = encodeURIComponent(activityUrl);
+
+    return {
+      activityUrl,
+      shareText,
+      facebookShareUrl: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+      xShareUrl: `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`,
+      whatsappShareUrl: `https://wa.me/?text=${encodedText}%20${encodedUrl}`,
+    };
+  }
+
+  // Share activity with native share API when available
+  async function shareActivity(activityName, details) {
+    const { activityUrl, shareText } = buildSocialShareLinks(activityName, details);
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: activityName,
+          text: shareText,
+          url: activityUrl,
+        });
+      } catch (error) {
+        if (error.name !== "AbortError") {
+          console.error("Error sharing activity:", error);
+        }
+      }
+      return;
+    }
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      try {
+        await navigator.clipboard.writeText(activityUrl);
+        showMessage("Activity link copied to clipboard!", "info");
+        return;
+      } catch (error) {
+        console.error("Error copying share link:", error);
+      }
+    }
+
+    window.open(activityUrl, "_blank", "noopener,noreferrer");
+  }
+
   // Function to determine activity type (this would ideally come from backend)
   function getActivityType(activityName, description) {
     const name = activityName.toLowerCase();
@@ -498,6 +550,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Format the schedule using the new helper function
     const formattedSchedule = formatSchedule(details);
+    const { facebookShareUrl, xShareUrl, whatsappShareUrl } =
+      buildSocialShareLinks(name, details);
 
     // Create activity tag
     const tagHtml = `
@@ -568,6 +622,38 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         `
         }
+        <div class="share-actions">
+          <button class="share-button native-share-button" data-activity="${name}">
+            Share
+          </button>
+          <a
+            class="share-button social-share-link"
+            href="${xShareUrl}"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Share ${name} on X"
+          >
+            X
+          </a>
+          <a
+            class="share-button social-share-link"
+            href="${facebookShareUrl}"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Share ${name} on Facebook"
+          >
+            Facebook
+          </a>
+          <a
+            class="share-button social-share-link"
+            href="${whatsappShareUrl}"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Share ${name} on WhatsApp"
+          >
+            WhatsApp
+          </a>
+        </div>
       </div>
     `;
 
@@ -586,6 +672,11 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
     }
+
+    const shareButton = activityCard.querySelector(".native-share-button");
+    shareButton.addEventListener("click", async () => {
+      await shareActivity(name, details);
+    });
 
     activitiesList.appendChild(activityCard);
   }

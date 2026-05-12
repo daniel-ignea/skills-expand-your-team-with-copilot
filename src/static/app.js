@@ -625,7 +625,7 @@ document.addEventListener("DOMContentLoaded", () => {
         `
         }
         <div class="share-actions">
-          <button class="share-button native-share-button" data-activity="${name}">
+          <button class="share-button native-share-button">
             Share
           </button>
           <a
@@ -633,7 +633,7 @@ document.addEventListener("DOMContentLoaded", () => {
             href="${xShareUrl}"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Share ${name} on X"
+            aria-label="Share activity on X"
           >
             X
           </a>
@@ -642,7 +642,7 @@ document.addEventListener("DOMContentLoaded", () => {
             href="${facebookShareUrl}"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Share ${name} on Facebook"
+            aria-label="Share activity on Facebook"
           >
             Facebook
           </a>
@@ -651,7 +651,7 @@ document.addEventListener("DOMContentLoaded", () => {
             href="${whatsappShareUrl}"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Share ${name} on WhatsApp"
+            aria-label="Share activity on WhatsApp"
           >
             WhatsApp
           </a>

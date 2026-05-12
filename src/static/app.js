@@ -307,12 +307,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Build social sharing links for an activity
   function buildSocialShareLinks(activityName, details) {
-    const activityUrl = `${window.location.origin}${window.location.pathname}?activity=${encodeURIComponent(
-      activityName
-    )}`;
-    const shareText = `Check out ${activityName} at ${schoolActivitiesName}! ${formatSchedule(
-      details
-    )}`;
+    const shareUrl = new URL(window.location.href);
+    shareUrl.searchParams.set("activity", activityName);
+    const activityUrl = shareUrl.toString();
+    const scheduleText = formatSchedule(details);
+    const shareText = scheduleText
+      ? `Check out ${activityName} at ${schoolActivitiesName}! Schedule: ${scheduleText}.`
+      : `Check out ${activityName} at ${schoolActivitiesName}!`;
     const encodedText = encodeURIComponent(shareText);
     const encodedUrl = encodeURIComponent(activityUrl);
 
